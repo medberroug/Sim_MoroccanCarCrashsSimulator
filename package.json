@@ -1,0 +1,22 @@
+{
+  "name": "simmoroccancarcrashsimulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/medberroug/Sim_MoroccanCarCrashsSimulator.git"
+  },
+  "author": "mohamed amine berroug",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/medberroug/Sim_MoroccanCarCrashsSimulator/issues"
+  },
+  "homepage": "https://github.com/medberroug/Sim_MoroccanCarCrashsSimulator#readme",
+  "dependencies": {
+    "mathjs": "^7.2.0"
+  }
+}

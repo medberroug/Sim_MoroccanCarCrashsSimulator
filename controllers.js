@@ -1,3 +1,5 @@
+const { abs } = require("mathjs");
+
 //! La fonction generatrice de NA.
 module.exports.alea = function alea(IX, IY, IZ) {
     var inter;
@@ -20,30 +22,36 @@ module.exports.alea = function alea(IX, IY, IZ) {
 
 
 //! le controleur qui nous donne la valeur precis a partir d'un intervalle de progression/ regression 
-module.exports.rangeController = rangeController = function rangeController(a, b, VA) {
-    return ((b - a) * VA + a)
+module.exports.rangeController = rangeController = function rangeController(a, b, VA,reduction) {
+    var result=((b - a) * VA + a);
+    for(var i=0;i<reduction;i++){
+        b=b-(abs(b)*0.1)
+        a=a-(abs(a)*0.1)
+        result=((b - a) * VA + a);
+    }
+    return result
 }
 
 //! le controleur qui fixe le taux NTAC 
-module.exports.ntacTauxController = function ntacTauxController(VA1, VA2) {
+module.exports.ntacTauxController = function ntacTauxController(VA1, VA2,reduction) {
     var result;
     if (VA1 < 0.1) {
-        result = rangeController(-3, 0, VA2)
+        result = rangeController(-3, 0, VA2,reduction)
         // console.log("VA1 < 0.1");
     } else if (VA1 < 0.37) {
-        result = rangeController(0, 2, VA2)
+        result = rangeController(0, 2, VA2,reduction)
         // console.log("VA1 < 0.37");
     } else if (VA1 < 0.64) {
-        result = rangeController(2, 4, VA2)
+        result = rangeController(2, 4, VA2,reduction)
         // console.log("VA1 < 0.64");
     } else if (VA1 < 0.78) {
-        result = rangeController(4, 7, VA2)
+        result = rangeController(4, 7, VA2,reduction)
         // console.log("VA1 < 0.78");
     } else if (VA1 < 0.92) {
-        result = rangeController(7, 11, VA2)
+        result = rangeController(7, 11, VA2,reduction)
         // console.log("VA1 < 0.92");
     } else {
-        result = rangeController(11, 14, VA2)
+        result = rangeController(11, 14, VA2,reduction)
         // console.log("else");
     }
     return result
