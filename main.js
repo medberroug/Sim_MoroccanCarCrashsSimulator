@@ -7,11 +7,11 @@ const {
 
 //! Simulation :une seule simulation globale
 
-function simulateur(IX, IY, IZ,reduction) {
+function simulateur(IX, IY, IZ, reduction) {
     //! Variable systeme:
     var years = 13;
 
-    //! Generer par Alea un tableau de VA (200):
+    //! Generer par Alea un tableau de VA (150):
     var randomVar = []
     for (var i = 0; i < 150; i++) {
         randomVar.push(controllers.alea(IX, IY, IZ))
@@ -34,26 +34,26 @@ function simulateur(IX, IY, IZ,reduction) {
     //! Boucle generatrice des indicateurs a simuler
     for (var i = 1; i < years; i++) {
         //TODO Calcule NTAC
-        NTAC.push(parseInt(NTAC[i - 1] * (1 + controllers.ntacTauxController(randomVar[i * 3], randomVar[i * 7],reduction) / 100)))
+        NTAC.push(parseInt(NTAC[i - 1] * (1 + controllers.ntacTauxController(randomVar[i * 3], randomVar[i * 7], reduction) / 100)))
         //TODO Calcule NTAM
         if (randomVar[i * 3 + 91] < 0.8) {
-            NTAM.push(parseInt(((NTAM[i - 1] / NTAC[i - 1]) * 100 + controllers.rangeController(-0.25, 0, randomVar[i * 5 + 80],reduction)) * NTAC[i] * 0.01))
+            NTAM.push(parseInt(((NTAM[i - 1] / NTAC[i - 1]) * 100 + controllers.rangeController(-0.25, 0, randomVar[i * 5 + 80], reduction)) * NTAC[i] * 0.01))
         } else {
-            NTAM.push(parseInt(((NTAM[i - 1] / NTAC[i - 1]) * 100 + controllers.rangeController(-0.45, -0.25, randomVar[i * 5 + 80],reduction)) * NTAC[i] * 0.01))
+            NTAM.push(parseInt(((NTAM[i - 1] / NTAC[i - 1]) * 100 + controllers.rangeController(-0.45, -0.25, randomVar[i * 5 + 80], reduction)) * NTAC[i] * 0.01))
         }
         //TODO Calcule NTANM
         NTANM.push(NTAC[i] - NTAM[i])
         //TODO Calcule NTT
         NTT.push(parseInt(
-            ((NTT[i - 1] / NTAM[i - 1]) * 100 + controllers.rangeController(-3, 1.5, randomVar[i * 5 + 10],reduction)) * NTAM[i] * 0.01
+            ((NTT[i - 1] / NTAM[i - 1]) * 100 + controllers.rangeController(-3, 1.5, randomVar[i * 5 + 10], reduction)) * NTAM[i] * 0.01
         ))
         //TODO Calcule NTB
         NTB.push(parseInt(
-            (((NTB[i - 1] / NTAC[i - 1]) * 100 + controllers.rangeController(-4, 1, randomVar[i * 6 + 40],reduction))) * NTAC[i] * 0.01
+            (((NTB[i - 1] / NTAC[i - 1]) * 100 + controllers.rangeController(-4, 1, randomVar[i * 6 + 40], reduction))) * NTAC[i] * 0.01
         ))
         // TODO Calcule NTBG
         NTBG.push(parseInt(
-            (controllers.rangeController(4, 9, randomVar[i * 8 + 25],reduction) / 100) * NTB[i]
+            (controllers.rangeController(4, 9, randomVar[i * 8 + 25], reduction) / 100) * NTB[i]
         ))
         //TODO Calcule NTBL
         NTBL.push(parseInt(
@@ -84,22 +84,25 @@ function simulateur(IX, IY, IZ,reduction) {
     return result
 }
 
+// console.log(simulateur(60,25,100,0));
 
-var IX = 56 - 3;
-var IY = 23 - 3;
-var IZ = 100 - 3;
 
-function loopSim(IX, IY, IZ, n,reduction) {
+// var IX = 60 - 3;
+// var IY = 23 - 3;
+// var IZ = 100 - 3;
+
+module.exports.loopSim = loopSim = function loopSim(IX, IY, IZ, n, reduction) {
     var result = []
     for (var i = 0; i < n; i++) {
         IX = IX + 3
         IY = IY + 3
         IZ = IZ + 3
-        result.push(simulateur(IX, IY, IZ,reduction))
+        result.push(simulateur(IX, IY, IZ, reduction))
     }
     return result
 }
-// var t = loopSim(IX, IY, IZ, 40)
+// var t = loopSim(IX, IY, IZ, 1,4)
+// console.log(loopSim(9,40, 100, 40,0));
 
 function avgCalculator(myIndicatorList) {
     var avgList = []
@@ -133,7 +136,7 @@ function icCalculator(myIndicatorList) {
     return icList
 }
 
-function mathCalculator(myList) {
+module.exports.mathCalculator = mathCalculator = function mathCalculator(myList) {
     var NTACList = []
     var NTAMList = []
     var NTANMList = []
@@ -153,10 +156,18 @@ function mathCalculator(myList) {
         NMTJList.push(myList[i][7])
     }
     // console.log(NTACList);
-    console.log(avgCalculator(NTAMList));
-
+    var result = []
+    result.push([avgCalculator(NTACList), icCalculator(NTACList)])
+    result.push([avgCalculator(NTAMList), icCalculator(NTAMList)])
+    result.push([avgCalculator(NTANMList), icCalculator(NTANMList)])
+    result.push([avgCalculator(NTTList), icCalculator(NTTList)])
+    result.push([avgCalculator(NTBList), icCalculator(NTBList)])
+    result.push([avgCalculator(NTBGList), icCalculator(NTBGList)])
+    result.push([avgCalculator(NTBLList), icCalculator(NTBLList)])
+    result.push([avgCalculator(NMTJList), icCalculator(NMTJList)])
+    return result
 
 
 }
 
-mathCalculator(loopSim(IX, IY, IZ, 40,3))
+// mathCalculator(loopSim(IX, IY, IZ, 40,0))
