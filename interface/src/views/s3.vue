@@ -191,7 +191,7 @@ export default {
       item.name = 2018 + p;
       item.NTAC = result.data[1][0][1][p];
       item.NTAM = result.data[1][1][1][p];
-      item.NTANM = result.data[0][2][1][p];
+      item.NTANM = result.data[1][2][1][p];
       item.NTT = result.data[1][3][1][p];
       item.NTB = result.data[1][4][1][p];
       item.NTBG = result.data[1][5][1][p];
