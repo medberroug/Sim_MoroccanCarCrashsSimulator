@@ -32,7 +32,7 @@ app.post('/s3/:IX/:IY/:IZ', async function (req, res) {
     await result.push(sim.loopSim(parseInt(req.params.IX), parseInt(req.params.IY), parseInt(req.params.IZ), 40, red))
     await result.push(sim.mathCalculator(result[0]))
     while(true){
-        if (result[1][1][0][8] > 2000 || (result[1][1][0][12] / result[1][1][0][0]) > 0.5) {
+        if (result[1][3][0][8] > 2000 || (result[1][3][0][12] / result[1][1][0][0]) > 0.5) {
             console.log("NTAAAM 26");
             console.log(result[1][1][0]);
             red = red + 1

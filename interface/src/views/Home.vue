@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-6">
+  <div class="pa-3">
    <router-view></router-view>
   </div>
 </template>
