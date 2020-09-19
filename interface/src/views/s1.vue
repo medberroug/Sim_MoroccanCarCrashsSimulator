@@ -5,6 +5,22 @@
       <v-flex xs12 md12 lg12 class="px-12">
         <strong>Question 1 : Simulation des 8 indicateurs (2019 => 2030)</strong>
         <v-row wrap class="mt-4">
+          <!-- <v-flex lg12>
+            <canvas id="chart_0" ref="chart_O" width="400" height="400"></canvas>
+          </v-flex>-->
+
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][0]" cat="1" :options="chartOptions" />
+          </v-container>
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][0]" cat="2" :options="chartOptions" />
+          </v-container>
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][0]"  cat="3" :options="chartOptions" />
+          </v-container>
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][0]"  cat="4" :options="chartOptions" />
+          </v-container>
           <v-flex lg12>
             <v-data-table
               :headers="myList[0].headers"
@@ -16,11 +32,23 @@
         </v-row>
       </v-flex>
     </v-row>
-    <v-row wrap class="mt-6">
+    <v-row wrap class="mt-4">
       <v-flex xs12 md12 lg12 class="px-12">
         <strong>Question 2 : 40 Simulations avec IC et MOY</strong>
         <v-container v-for="(item,i) in myList" :key="i">
           <v-row wrap class="mt-4">
+            <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][i]" cat="1" :options="chartOptions" />
+          </v-container>
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][i]" cat="2" :options="chartOptions" />
+          </v-container>
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][i]"  cat="3" :options="chartOptions" />
+          </v-container>
+          <v-container class="myChartClass">
+            <line-chart :chartData="dataForCharts[0][i]"  cat="4" :options="chartOptions" />
+          </v-container>
             <v-flex lg12>
               <v-data-table
                 :headers="item.headers"
@@ -34,6 +62,7 @@
         <v-divider class="my-6"></v-divider>
         <strong>MOY: la moyenne sur 40 simulations</strong>
         <v-row wrap class="mt-4">
+         
           <v-flex lg12>
             <v-data-table
               :headers="avgList.headers"
@@ -62,7 +91,13 @@
 
 <script>
 import apiX from "../../services/api";
+// import Chart from 'chart.js';
+import Chart from "chart.js";
+import LineChart from "../components/LineChart";
 export default {
+  components: {
+    LineChart,
+  },
   async mounted() {
     // console.log(this.$route.params);
     var result = await apiX.sendS1(
@@ -75,7 +110,8 @@ export default {
       this.$route.params.IY,
       this.$route.params.IZ
     );
-    console.log(result);
+    console.log(result.data);
+    this.dataForCharts = result.data;
     for (var i = 0; i < 40; i++) {
       var myTablo = {
         headers: [
@@ -159,7 +195,7 @@ export default {
       item.name = 2018 + p;
       item.NTAC = result.data[1][0][1][p];
       item.NTAM = result.data[1][1][1][p];
-      item.NTANM = result.data[0][2][1][p];
+      item.NTANM = result.data[1][2][1][p];
       item.NTT = result.data[1][3][1][p];
       item.NTB = result.data[1][4][1][p];
       item.NTBG = result.data[1][5][1][p];
@@ -170,6 +206,14 @@ export default {
   },
   data() {
     return {
+      dataForCharts: null,
+
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+
+      chart: [],
       myList: [],
       avgList: {
         headers: [
@@ -216,4 +260,10 @@ export default {
 </script>
 
 <style>
+.myChartClass {
+  width: 500px;
+  height: 400px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 </style>
